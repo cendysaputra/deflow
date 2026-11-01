@@ -1,0 +1,26 @@
+name: lint-skills
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: cendysaputra/agentic-weave
+          path: agentic-weave
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+        env:
+          WEAVE_CORE: agentic-weave/skills/weave-core/SKILL.md
+      - run: for f in skills/*/scripts/*.mjs; do node --check "$f"; done

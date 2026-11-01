@@ -1,0 +1,12 @@
+{
+  "name": "deflow",
+  "description": "deflow: a gated web project flow from brief to handoff, conversion to WordPress, Elementor, WooCommerce, Statamic, Laravel, Astro, and React, and a reference-site toolkit.",
+  "author": {
+    "name": "Cendy Saputra",
+    "url": "https://github.com/cendysaputra"
+  },
+  "homepage": "https://github.com/cendysaputra/deflow",
+  "repository": "https://github.com/cendysaputra/deflow",
+  "license": "MIT",
+  "version": "0.1.0"
+}

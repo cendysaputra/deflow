@@ -1,0 +1,16 @@
+{
+  "name": "deflow",
+  "owner": {
+    "name": "Cendy Saputra",
+    "url": "https://github.com/cendysaputra"
+  },
+  "description": "deflow: a gated web project flow, stack conversion, and a reference-site toolkit for AI coding agents.",
+  "plugins": [
+    {
+      "name": "deflow",
+      "source": "./",
+      "description": "The deflow skills: deflow, deflow-convert, and deflow-ref.",
+      "category": "productivity"
+    }
+  ]
+}
