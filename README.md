@@ -1,6 +1,6 @@
-# Deflow — Standar Kerja Development Imajiner
+# Deflow — Standar Kerja Development
 
-Template default untuk semua project website Imajiner: design Figma (dibaca via Figma MCP) menjadi WordPress. Agent-neutral, bisa dipakai Claude Code, Codex, Cursor, atau agent lain yang membaca `AGENTS.md`.
+Template default untuk project website: design Figma (dibaca via Figma MCP) menjadi WordPress. Agent-neutral, bisa dipakai Claude Code, Codex, Cursor, atau agent lain yang membaca `AGENTS.md`.
 
 ## Memulai project baru
 
@@ -52,6 +52,12 @@ Di akhir setiap tahap agent berhenti dan menunggu persetujuan.
 `starter/gitignore` hanya men-track:
 
 - `AGENTS.md`, `CLAUDE.md`, `workflow/`, `docs/`, `.claude/`
-- `wp-content/themes/imajiner-theme/`
+- Folder theme project yang tercantum di `starter/gitignore`.
 
 Core WordPress, plugin, uploads, `starter/`, dan `templates/` tidak masuk repo project.
+
+## Contributors
+
+- [Cendy](https://github.com/cendysaputra) — pemilik dan pengelola project.
+- [Cursor Agent](https://github.com/cursoragent) — kontributor melalui Cursor.
+- [Claude](https://github.com/claude) — kontributor template dan workflow.
