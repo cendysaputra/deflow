@@ -1,6 +1,0 @@
-node_modules/
-.DS_Store
-
-# Output of the deflow-ref scripts: third-party copies and crawl reports.
-atm/
-reference-crawl/
