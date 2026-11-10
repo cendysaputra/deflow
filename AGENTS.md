@@ -29,7 +29,7 @@ Ditanyakan sekali di awal dan dicatat di `docs/project.md`. Di dokumen ini, `{{.
 | `{{PREFIX}}` | `{{prefix}}` huruf besar | `NP` |
 
 - Prefix konsisten di semua file dan tidak sama dengan prefix milik framework, CMS, atau plugin.
-- Setelah starter disalin, semua placeholder diganti. `grep -rn '{{'` di file hasil salinan harus kosong.
+- Setelah starter disalin, semua placeholder diganti. `grep -rnE '\{\{(PROJECT_NAME|PROJECT_SLUG|AUTHOR|PREFIX|prefix)\}\}'` di file hasil salinan harus kosong.
 
 ## Aturan wajib
 
