@@ -56,8 +56,3 @@ Di akhir setiap tahap agent berhenti dan menunggu persetujuan.
 
 Core WordPress, plugin, uploads, `starter/`, dan `templates/` tidak masuk repo project.
 
-## Contributors
-
-- [Cendy](https://github.com/cendysaputra) — pemilik dan pengelola project.
-- [Cursor Agent](https://github.com/cursoragent) — kontributor melalui Cursor.
-- [Claude](https://github.com/claude) — kontributor template dan workflow.
