@@ -6,7 +6,7 @@ Aturan untuk semua agent yang mengubah design Figma (via Figma MCP) menjadi webs
 
 - WordPress lokal (LocalWP) + WP-CLI. Agent dijalankan dari root WordPress (folder berisi `wp-config.php`).
 - Figma hanya desktop. Koneksi Figma MCP sudah siap.
-- Theme project: `wp-content/themes/deflow-theme`.
+- Theme project: `wp-content/themes/{{THEME_SLUG}}`.
 - Status project ada di `docs/project.md`. Baca dulu sebelum kerja. Isinya: pilihan (theme, render, ACF, WooCommerce, font), halaman (frame Figma, slug, ID, section, status), CPT/taxonomy, field group, komponen, token mapping, pembulatan nilai, keputusan, pertanyaan terbuka, progress.
 
 ## Cara kerja
@@ -14,6 +14,31 @@ Aturan untuk semua agent yang mengubah design Figma (via Figma MCP) menjadi webs
 - Ikuti alur 10 tahap di bawah secara berurutan.
 - Akhir setiap tahap: update `docs/project.md`, laporkan singkat, lalu **berhenti dan tunggu user**.
 - Tanya dulu sebelum: install theme/plugin/library, menghapus konten, mengubah setting yang sudah terisi.
+
+## Identitas project
+
+Starter (`starter/theme/` di skill) memakai placeholder. Langkah pertama bootstrap, sebelum menyalin starter:
+
+1. Tanya nama project, author, dan prefix.
+
+   | Placeholder | Isi | Contoh |
+   |---|---|---|
+   | `{{THEME_NAME}}` | Nama project + " Theme" | `Nama Project Theme` |
+   | `{{THEME_SLUG}}` | kebab-case dari Theme Name, dipakai untuk folder, slug, dan Text Domain | `nama-project-theme` |
+   | `{{AUTHOR}}` | Nama author | `Nama Studio` |
+   | `{{prefix}}` | 2–4 huruf kecil dari nama project | `npt` |
+   | `{{PREFIX}}` | `{{prefix}}` huruf besar | `NPT` |
+
+2. Cek bentrok:
+   - Slug belum ada di `wp theme list` dan tidak dipakai theme di WordPress.org (`wp theme search <slug>`).
+   - Prefix bukan milik WordPress atau plugin umum (`wp`, `ast`, `wc`, `acf`, `el`).
+3. Catat nilainya di `docs/project.md`. Di dokumen ini, `{{...}}` berarti nilai tersebut.
+4. Salin `starter/theme/` ke `wp-content/themes/<slug>/`, lalu ganti semua placeholder di folder itu:
+   ```bash
+   grep -rlI '{{' wp-content/themes/<slug> | xargs perl -pi -e 's/\{\{THEME_NAME\}\}/Nama Project Theme/g; s/\{\{THEME_SLUG\}\}/nama-project-theme/g; s/\{\{AUTHOR\}\}/Nama Studio/g; s/\{\{PREFIX\}\}/NPT/g; s/\{\{prefix\}\}/npt/g'
+   ```
+5. Pastikan tidak ada placeholder tersisa. `grep -rn '{{' wp-content/themes/<slug>` harus kosong.
+6. `screenshot.png`: minta logo klien, lalu buat gambar 1200×900 dari logo tersebut. Kalau belum ada, pakai placeholder polos dari starter dan catat di pertanyaan terbuka.
 
 ## Pilihan awal
 
@@ -31,8 +56,8 @@ Cek kecocokan:
 
 | Render | Cara |
 |---|---|
-| Template PHP | `page-{slug}.php` memanggil `dfl_section( 'nama' )` dari `template-parts/sections/` |
-| ACF Blocks | `blocks/{nama}/block.json` + `render.php`, nama `dfl/{nama}`, terdaftar otomatis oleh `inc/blocks.php` |
+| Template PHP | `page-{slug}.php` memanggil `{{prefix}}_section( 'nama' )` dari `template-parts/sections/` |
+| ACF Blocks | `blocks/{nama}/block.json` + `render.php`, nama `{{prefix}}/{nama}`, terdaftar otomatis oleh `inc/blocks.php` |
 | Elementor | Container dengan HTML tag benar, styling lewat class CSS global theme |
 
 ## Theme
@@ -40,8 +65,8 @@ Cek kecocokan:
 ### A. Child theme Astra
 
 - Astra dari WordPress.org, wajib tetap terpasang sebagai induk.
-- `style.css`: Theme Name `Deflow Theme`, Description `Child theme dari Astra.`, Version `1.0.0`, `Template: astra`, `Update URI: false`.
-- `screenshot.png`: pakai logo project dari user. Kalau belum ada, pakai placeholder polos dari starter.
+- `style.css`: Theme Name `{{THEME_NAME}}`, Author `{{AUTHOR}}`, Description `Child theme dari Astra.`, Version `1.0.0`, `Template: astra`, Text Domain `{{THEME_SLUG}}`, `Update URI: false`.
+- `screenshot.png`: logo klien (lihat Identitas project).
 - Global style dari Customizer Astra (Global Colors, Typography, Buttons, Container). `tokens.css` merujuk `var(--ast-global-color-N)`.
 - `<header>`, `<main>`, `<footer>` site sudah dari Astra. Jangan dobel.
 - Halaman custom: layout full width/stretched. Sembunyikan title Astra jika hero punya h1.
@@ -52,7 +77,7 @@ Salin starter yang sama, lalu ubah:
 
 - `style.css`: hapus baris `Template`, Description `Theme standalone.`
 - `inc/enqueue.php`: hapus dependensi `astra-theme-css`.
-- `tokens.css`: nilai langsung tanpa `--ast-global-color`, tambah token font dan `--dfl-h1`…`--dfl-h6` dengan override per breakpoint, `@font-face` dengan file di `assets/fonts/`.
+- `tokens.css`: nilai langsung tanpa `--ast-global-color`, tambah token font dan `--{{prefix}}-h1`…`--{{prefix}}-h6` dengan override per breakpoint, `@font-face` dengan file di `assets/fonts/`.
 - `inc/setup.php` (load di `functions.php`): theme support `title-tag`, `post-thumbnails`, `custom-logo`, `html5`, `responsive-embeds`, `woocommerce` (jika aktif), dan menu `primary` + `footer`.
 - `header.php` / `footer.php`: skip link ke `#main-content`, `<header>`, `<nav aria-label>`, `<main id="main-content">`, `<footer>`. Nav mobile dibangun sendiri (`<button aria-expanded>` + `data-*`, menu tetap tampil tanpa JS).
 - `index.php`, `page.php`, `single.php`, `archive.php`, `404.php`: minimal dan semantik.
@@ -61,11 +86,11 @@ Salin starter yang sama, lalu ubah:
 
 ### Anti bentrok
 
-- Slug `deflow-theme`, Theme Name, dan Text Domain unik. `Update URI: false` supaya tidak ditimpa theme lain dengan slug sama.
-- Prefix wajib: function, constant, hook, option, handle enqueue `dfl_` / `DFL_` / `dfl-`. CSS variable `--dfl-`.
+- Slug `{{THEME_SLUG}}`, Theme Name, dan Text Domain unik. `Update URI: false` supaya tidak ditimpa theme lain dengan slug sama.
+- Prefix wajib dan konsisten di semua file: function, constant, hook, option, handle enqueue `{{prefix}}_` / `{{PREFIX}}_` / `{{prefix}}-`. CSS variable `--{{prefix}}-`. Block `{{prefix}}/`.
 - Jangan deklarasi ulang function/class milik WordPress, Astra, atau plugin.
 - Jangan deregister asset Astra/plugin kecuali perlu dan sudah izin.
-- Class CSS jangan pakai nama generik milik Astra/WooCommerce (`.button`, `.site-header`). Beri prefix `dfl-` jika bentrok.
+- Class CSS jangan pakai nama generik milik Astra/WooCommerce (`.button`, `.site-header`). Beri prefix `{{prefix}}-` jika bentrok.
 
 ## Aturan wajib
 
@@ -100,7 +125,7 @@ Salin starter yang sama, lalu ubah:
 | Padding kiri/kanan | 24px | 24px | 16px |
 | Jarak antar section | 120px | 72px | 72px |
 
-- Default ini wajib. Nilainya ada di token `--dfl-container`, `--dfl-gutter`, `--dfl-section-space`.
+- Default ini wajib. Nilainya ada di token `--{{prefix}}-container`, `--{{prefix}}-gutter`, `--{{prefix}}-section-space`.
 - Desktop-first: `@media (max-width: 921px)` dan `@media (max-width: 544px)`.
 - Grid 4 → 2 → 1, 3 → 2 → 1, 2 → 1 (`.grid-4`, `.grid-3`, `.grid-2`).
 - Gambar + teks berdampingan ditumpuk di mobile.
@@ -113,12 +138,12 @@ Salin starter yang sama, lalu ubah:
 ## ACF
 
 - CPT, taxonomy, options page, dan field group dibuat lewat ACF, bukan `register_post_type()` di kode.
-  - Default: tulis JSON ke `deflow-theme/acf-json/`, user klik "Sync" di admin ACF.
+  - Default: tulis JSON ke `{{THEME_SLUG}}/acf-json/`, user klik "Sync" di admin ACF.
   - Kalau ragu: beri checklist isian UI ACF ke user.
-- Local JSON di `deflow-theme/acf-json` (diatur `inc/acf.php`).
+- Local JSON di `{{THEME_SLUG}}/acf-json` (diatur `inc/acf.php`).
 - Konten berulang: Free → CPT; Pro → Repeater / Flexible Content.
-- Data global: Pro → Options Page; Free → halaman privat slug `global`. Dibaca lewat `dfl_global()`.
-- Field name snake_case dengan prefix section (`hero_title`). Key: `group_dfl_*`, `field_dfl_*`, `post_type_dfl_*`, `taxonomy_dfl_*`.
+- Data global: Pro → Options Page; Free → halaman privat slug `global`. Dibaca lewat `{{prefix}}_global()`.
+- Field name snake_case dengan prefix section (`hero_title`). Key: `group_{{prefix}}_*`, `field_{{prefix}}_*`, `post_type_{{prefix}}_*`, `taxonomy_{{prefix}}_*`.
 - Image return **ID** (render `wp_get_attachment_image()`), Link return **array**.
 - Output selalu di-escape. Field kosong tidak merender wrapper-nya.
 
@@ -126,7 +151,7 @@ Salin starter yang sama, lalu ubah:
 
 | File | Isi |
 |---|---|
-| `inc/helpers.php` | `dfl_asset_url()`, `dfl_asset_version()`, `dfl_field()`, `dfl_global()`, `dfl_component()`, `dfl_section()` |
+| `inc/helpers.php` | `{{prefix}}_asset_url()`, `{{prefix}}_asset_version()`, `{{prefix}}_field()`, `{{prefix}}_global()`, `{{prefix}}_component()`, `{{prefix}}_section()` |
 | `inc/enqueue.php` | CSS (tokens → base → utilities → components) dan `main.js` (defer) |
 | `inc/acf.php` | Path ACF Local JSON |
 | `inc/blocks.php` | Register `blocks/*/block.json` |
@@ -135,9 +160,9 @@ Salin starter yang sama, lalu ubah:
 | `template-parts/components/` | `button.php`, `accordion.php`, `tabs.php` |
 
 ```php
-dfl_component( 'button', array( 'link' => dfl_field( 'hero_link' ), 'class' => 'btn-outline' ) );
-dfl_component( 'accordion', array( 'items' => $items, 'name' => 'faq', 'level' => 3 ) );
-dfl_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
+{{prefix}}_component( 'button', array( 'link' => {{prefix}}_field( 'hero_link' ), 'class' => 'btn-outline' ) );
+{{prefix}}_component( 'accordion', array( 'items' => $items, 'name' => 'faq', 'level' => 3 ) );
+{{prefix}}_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
 ```
 
 - `button`: `link` = ACF Link (`url`, `title`, `target`).
@@ -148,6 +173,7 @@ dfl_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
 
 ### 1. Cek awal
 
+- Identitas project: nama, author, prefix (lihat bagian Identitas project).
 - `wp core version`, `wp theme list`, `wp plugin list`, `wp option get siteurl`.
 - Buat `docs/project.md` jika belum ada.
 - Minta link Figma, list page dan frame (nama + node id) via Figma MCP.
@@ -155,9 +181,9 @@ dfl_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
 ### 2. Pilihan dan setup theme
 
 - Tanya pilihan awal (theme, render, ACF, logo untuk `screenshot.png`). Cek kecocokan.
-- A: `wp theme install astra` (izin), pasang `deflow-theme`, `wp theme activate deflow-theme`.
-- B: pasang `deflow-theme` lalu ubah sesuai bagian B.
-- Pastikan front page tanpa error PHP dan asset `dfl-*` termuat.
+- A: `wp theme install astra` (izin), pasang `{{THEME_SLUG}}` dengan placeholder sudah diganti, `wp theme activate {{THEME_SLUG}}`.
+- B: pasang `{{THEME_SLUG}}` dengan placeholder sudah diganti, lalu ubah sesuai bagian B.
+- Pastikan front page tanpa error PHP dan asset `{{prefix}}-*` termuat.
 
 ### 3. Analisis design
 
@@ -184,13 +210,13 @@ dfl_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
 ### 6. Field group
 
 - Satu group per halaman / CPT / data global, hanya untuk konten yang ada di Figma.
-- Location rule sesuai halaman, CPT, options, atau block `dfl/{nama}`.
+- Location rule sesuai halaman, CPT, options, atau block `{{prefix}}/{nama}`.
 
 ### 7. Input konten
 
 - Teks persis Figma.
 - Gambar di-export dari Figma, lalu `wp media import <file> --alt="..." --porcelain`.
-- Isi field pakai field key: `wp eval 'update_field( "field_dfl_hero_title", "...", <id> );'`. Global Pro pakai `"option"`.
+- Isi field pakai field key: `wp eval 'update_field( "field_{{prefix}}_hero_title", "...", <id> );'`. Global Pro pakai `"option"`.
 - ACF Blocks: data disimpan di atribut block dalam `post_content`.
 
 ### 8. Build halaman
@@ -210,7 +236,7 @@ dfl_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
 ### 10. Animasi (setelah approval)
 
 - CSS + IntersectionObserver dulu. Library hanya jika perlu dan sudah izin.
-- Hanya `transform` dan `opacity`, durasi dan easing dari token `--dfl-duration` / `--dfl-ease`.
+- Hanya `transform` dan `opacity`, durasi dan easing dari token `--{{prefix}}-duration` / `--{{prefix}}-ease`.
 - Hormati `prefers-reduced-motion`.
 - Konten tetap tampil tanpa JS: state awal tersembunyi hanya berlaku setelah JS menambah class `.has-js` ke `<html>`.
 
