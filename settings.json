@@ -3,10 +3,21 @@
   "permissions": {
     "deny": [
       "Edit(wp-admin/**)",
+      "Write(wp-admin/**)",
       "Edit(wp-includes/**)",
+      "Write(wp-includes/**)",
       "Edit(wp-*.php)",
+      "Write(wp-*.php)",
       "Edit(wp-content/plugins/**)",
-      "Edit(wp-content/themes/astra/**)"
+      "Write(wp-content/plugins/**)",
+      "Edit(wp-content/themes/astra/**)",
+      "Write(wp-content/themes/astra/**)",
+      "Edit(vendor/**)",
+      "Write(vendor/**)",
+      "Edit(public/vendor/**)",
+      "Write(public/vendor/**)",
+      "Edit(node_modules/**)",
+      "Write(node_modules/**)"
     ]
   }
 }
