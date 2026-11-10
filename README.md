@@ -1,31 +1,32 @@
 # Deflow
 
-Skill standar kerja Development Imajiner: design Figma → WordPress (Astra child theme + ACF).
+Skill untuk membangun website WordPress dari design Figma (Astra child theme + ACF). Aturannya ada di `AGENTS.md`, jadi bisa dipakai Claude Code, Codex, Cursor, atau agent lain.
 
 ## Isi
 
 ```
-SKILL.md                  langkah setup project
-AGENTS.md                 aturan + alur 10 tahap
-settings.json             deny edit core, plugin, Astra
-starter/imajiner-theme/   starter child theme Astra
+SKILL.md        langkah setup project
+AGENTS.md       aturan + alur 10 tahap
+settings.json   blokir edit core WP, plugin, dan Astra (Claude Code)
+starter/theme/  starter child theme dengan placeholder
 ```
 
-## Install skill
+## Install di lokal
 
-Claude Code (semua project):
+Claude Code:
 
 ```bash
 git clone https://github.com/cendysaputra/deflow.git ~/.claude/skills/deflow
 ```
 
-Hanya untuk satu project: clone ke `.claude/skills/deflow` di root WordPress.
+Update: `git -C ~/.claude/skills/deflow pull`
 
-Agent lain: salin `AGENTS.md` ke root WordPress dan jalankan langkah di `SKILL.md` secara manual.
+Agent lain: clone di folder mana saja. Saat mulai project, minta agent membaca `SKILL.md` dari folder itu.
 
 ## Mulai project
 
-1. Buat site baru di LocalWP, lalu buka "Open site shell" (root WordPress di `app/public`).
-2. Jalankan agent dari root WordPress.
-3. Minta: "Mulai project WordPress dari Figma <link Figma>".
-4. Skill menyalin `AGENTS.md`, membuat `CLAUDE.md` dan `.claude/settings.json`, menanyakan pilihan theme, memasang `imajiner-theme`, lalu lanjut ke alur 10 tahap.
+1. Buat site di LocalWP, lalu buka **Open site shell**.
+2. Jalankan agent dari root WordPress (`app/public`).
+3. Minta: `Mulai project WordPress dari Figma <link>`.
+
+Agent akan menanyakan nama project, author, prefix, dan pilihan theme. Setelah itu agent memasang theme dan mengikuti alur di `AGENTS.md`.
