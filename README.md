@@ -1,6 +1,8 @@
 # Deflow — Standar Kerja Development
 
-Template default untuk project website: design Figma (dibaca via Figma MCP) menjadi WordPress. Agent-neutral, bisa dipakai Claude Code, Codex, Cursor, atau agent lain yang membaca `AGENTS.md`.
+Template default untuk project website: design Figma (dibaca via Figma MCP) menjadi WordPress.
+
+Aturan utama ada di `AGENTS.md` dan bisa dipakai Claude Code, Codex, Cursor, atau agent lain. Konfigurasi `.claude/` bersifat opsional dan khusus untuk Claude Code.
 
 ## Memulai project baru
 
