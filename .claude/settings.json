@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "deny": [
+      "Edit(wp-admin/**)",
+      "Edit(wp-includes/**)",
+      "Edit(wp-*.php)",
+      "Edit(wp-content/plugins/**)",
+      "Edit(wp-content/themes/astra/**)"
+    ]
+  }
+}
