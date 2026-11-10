@@ -1,4 +1,4 @@
-# AGENTS.md — Standar Kerja Development Imajiner
+# AGENTS.md — Standar Kerja Deflow
 
 Aturan untuk semua agent yang mengubah design Figma (via Figma MCP) menjadi website WordPress.
 
@@ -6,7 +6,7 @@ Aturan untuk semua agent yang mengubah design Figma (via Figma MCP) menjadi webs
 
 - WordPress lokal (LocalWP) + WP-CLI. Agent dijalankan dari root WordPress (folder berisi `wp-config.php`).
 - Figma hanya desktop. Koneksi Figma MCP sudah siap.
-- Theme project: `wp-content/themes/imajiner-theme`.
+- Theme project: `wp-content/themes/deflow-theme`.
 - Status project ada di `docs/project.md`. Baca dulu sebelum kerja. Isinya: pilihan (theme, render, ACF, WooCommerce, font), halaman (frame Figma, slug, ID, section, status), CPT/taxonomy, field group, komponen, token mapping, pembulatan nilai, keputusan, pertanyaan terbuka, progress.
 
 ## Cara kerja
@@ -31,8 +31,8 @@ Cek kecocokan:
 
 | Render | Cara |
 |---|---|
-| Template PHP | `page-{slug}.php` memanggil `imj_section( 'nama' )` dari `template-parts/sections/` |
-| ACF Blocks | `blocks/{nama}/block.json` + `render.php`, nama `imj/{nama}`, terdaftar otomatis oleh `inc/blocks.php` |
+| Template PHP | `page-{slug}.php` memanggil `dfl_section( 'nama' )` dari `template-parts/sections/` |
+| ACF Blocks | `blocks/{nama}/block.json` + `render.php`, nama `dfl/{nama}`, terdaftar otomatis oleh `inc/blocks.php` |
 | Elementor | Container dengan HTML tag benar, styling lewat class CSS global theme |
 
 ## Theme
@@ -40,8 +40,8 @@ Cek kecocokan:
 ### A. Child theme Astra
 
 - Astra dari WordPress.org, wajib tetap terpasang sebagai induk.
-- `style.css`: Theme Name `Imajiner Theme`, Author `Imajiner`, Description `Child theme dari Astra.`, Version `1.0.0`, `Template: astra`, `Update URI: false`.
-- `screenshot.png`: pakai logo Imajiner dari user. Kalau belum ada, pakai placeholder polos dari starter.
+- `style.css`: Theme Name `Deflow Theme`, Description `Child theme dari Astra.`, Version `1.0.0`, `Template: astra`, `Update URI: false`.
+- `screenshot.png`: pakai logo project dari user. Kalau belum ada, pakai placeholder polos dari starter.
 - Global style dari Customizer Astra (Global Colors, Typography, Buttons, Container). `tokens.css` merujuk `var(--ast-global-color-N)`.
 - `<header>`, `<main>`, `<footer>` site sudah dari Astra. Jangan dobel.
 - Halaman custom: layout full width/stretched. Sembunyikan title Astra jika hero punya h1.
@@ -50,9 +50,9 @@ Cek kecocokan:
 
 Salin starter yang sama, lalu ubah:
 
-- `style.css`: hapus baris `Template`, Description `Theme standalone Imajiner.`
+- `style.css`: hapus baris `Template`, Description `Theme standalone.`
 - `inc/enqueue.php`: hapus dependensi `astra-theme-css`.
-- `tokens.css`: nilai langsung tanpa `--ast-global-color`, tambah token font dan `--imj-h1`…`--imj-h6` dengan override per breakpoint, `@font-face` dengan file di `assets/fonts/`.
+- `tokens.css`: nilai langsung tanpa `--ast-global-color`, tambah token font dan `--dfl-h1`…`--dfl-h6` dengan override per breakpoint, `@font-face` dengan file di `assets/fonts/`.
 - `inc/setup.php` (load di `functions.php`): theme support `title-tag`, `post-thumbnails`, `custom-logo`, `html5`, `responsive-embeds`, `woocommerce` (jika aktif), dan menu `primary` + `footer`.
 - `header.php` / `footer.php`: skip link ke `#main-content`, `<header>`, `<nav aria-label>`, `<main id="main-content">`, `<footer>`. Nav mobile dibangun sendiri (`<button aria-expanded>` + `data-*`, menu tetap tampil tanpa JS).
 - `index.php`, `page.php`, `single.php`, `archive.php`, `404.php`: minimal dan semantik.
@@ -61,11 +61,11 @@ Salin starter yang sama, lalu ubah:
 
 ### Anti bentrok
 
-- Slug `imajiner-theme`, Theme Name, dan Text Domain unik. `Update URI: false` supaya tidak ditimpa theme lain dengan slug sama.
-- Prefix wajib: function, constant, hook, option, handle enqueue `imj_` / `IMJ_` / `imj-`. CSS variable `--imj-`.
+- Slug `deflow-theme`, Theme Name, dan Text Domain unik. `Update URI: false` supaya tidak ditimpa theme lain dengan slug sama.
+- Prefix wajib: function, constant, hook, option, handle enqueue `dfl_` / `DFL_` / `dfl-`. CSS variable `--dfl-`.
 - Jangan deklarasi ulang function/class milik WordPress, Astra, atau plugin.
 - Jangan deregister asset Astra/plugin kecuali perlu dan sudah izin.
-- Class CSS jangan pakai nama generik milik Astra/WooCommerce (`.button`, `.site-header`). Beri prefix `imj-` jika bentrok.
+- Class CSS jangan pakai nama generik milik Astra/WooCommerce (`.button`, `.site-header`). Beri prefix `dfl-` jika bentrok.
 
 ## Aturan wajib
 
@@ -100,7 +100,7 @@ Salin starter yang sama, lalu ubah:
 | Padding kiri/kanan | 24px | 24px | 16px |
 | Jarak antar section | 120px | 72px | 72px |
 
-- Default ini wajib. Nilainya ada di token `--imj-container`, `--imj-gutter`, `--imj-section-space`.
+- Default ini wajib. Nilainya ada di token `--dfl-container`, `--dfl-gutter`, `--dfl-section-space`.
 - Desktop-first: `@media (max-width: 921px)` dan `@media (max-width: 544px)`.
 - Grid 4 → 2 → 1, 3 → 2 → 1, 2 → 1 (`.grid-4`, `.grid-3`, `.grid-2`).
 - Gambar + teks berdampingan ditumpuk di mobile.
@@ -113,12 +113,12 @@ Salin starter yang sama, lalu ubah:
 ## ACF
 
 - CPT, taxonomy, options page, dan field group dibuat lewat ACF, bukan `register_post_type()` di kode.
-  - Default: tulis JSON ke `imajiner-theme/acf-json/`, user klik "Sync" di admin ACF.
+  - Default: tulis JSON ke `deflow-theme/acf-json/`, user klik "Sync" di admin ACF.
   - Kalau ragu: beri checklist isian UI ACF ke user.
-- Local JSON di `imajiner-theme/acf-json` (diatur `inc/acf.php`).
+- Local JSON di `deflow-theme/acf-json` (diatur `inc/acf.php`).
 - Konten berulang: Free → CPT; Pro → Repeater / Flexible Content.
-- Data global: Pro → Options Page; Free → halaman privat slug `global`. Dibaca lewat `imj_global()`.
-- Field name snake_case dengan prefix section (`hero_title`). Key: `group_imj_*`, `field_imj_*`, `post_type_imj_*`, `taxonomy_imj_*`.
+- Data global: Pro → Options Page; Free → halaman privat slug `global`. Dibaca lewat `dfl_global()`.
+- Field name snake_case dengan prefix section (`hero_title`). Key: `group_dfl_*`, `field_dfl_*`, `post_type_dfl_*`, `taxonomy_dfl_*`.
 - Image return **ID** (render `wp_get_attachment_image()`), Link return **array**.
 - Output selalu di-escape. Field kosong tidak merender wrapper-nya.
 
@@ -126,7 +126,7 @@ Salin starter yang sama, lalu ubah:
 
 | File | Isi |
 |---|---|
-| `inc/helpers.php` | `imj_asset_url()`, `imj_asset_version()`, `imj_field()`, `imj_global()`, `imj_component()`, `imj_section()` |
+| `inc/helpers.php` | `dfl_asset_url()`, `dfl_asset_version()`, `dfl_field()`, `dfl_global()`, `dfl_component()`, `dfl_section()` |
 | `inc/enqueue.php` | CSS (tokens → base → utilities → components) dan `main.js` (defer) |
 | `inc/acf.php` | Path ACF Local JSON |
 | `inc/blocks.php` | Register `blocks/*/block.json` |
@@ -135,9 +135,9 @@ Salin starter yang sama, lalu ubah:
 | `template-parts/components/` | `button.php`, `accordion.php`, `tabs.php` |
 
 ```php
-imj_component( 'button', array( 'link' => imj_field( 'hero_link' ), 'class' => 'btn-outline' ) );
-imj_component( 'accordion', array( 'items' => $items, 'name' => 'faq', 'level' => 3 ) );
-imj_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
+dfl_component( 'button', array( 'link' => dfl_field( 'hero_link' ), 'class' => 'btn-outline' ) );
+dfl_component( 'accordion', array( 'items' => $items, 'name' => 'faq', 'level' => 3 ) );
+dfl_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
 ```
 
 - `button`: `link` = ACF Link (`url`, `title`, `target`).
@@ -155,9 +155,9 @@ imj_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
 ### 2. Pilihan dan setup theme
 
 - Tanya pilihan awal (theme, render, ACF, logo untuk `screenshot.png`). Cek kecocokan.
-- A: `wp theme install astra` (izin), pasang `imajiner-theme`, `wp theme activate imajiner-theme`.
-- B: pasang `imajiner-theme` lalu ubah sesuai bagian B.
-- Pastikan front page tanpa error PHP dan asset `imj-*` termuat.
+- A: `wp theme install astra` (izin), pasang `deflow-theme`, `wp theme activate deflow-theme`.
+- B: pasang `deflow-theme` lalu ubah sesuai bagian B.
+- Pastikan front page tanpa error PHP dan asset `dfl-*` termuat.
 
 ### 3. Analisis design
 
@@ -184,13 +184,13 @@ imj_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
 ### 6. Field group
 
 - Satu group per halaman / CPT / data global, hanya untuk konten yang ada di Figma.
-- Location rule sesuai halaman, CPT, options, atau block `imj/{nama}`.
+- Location rule sesuai halaman, CPT, options, atau block `dfl/{nama}`.
 
 ### 7. Input konten
 
 - Teks persis Figma.
 - Gambar di-export dari Figma, lalu `wp media import <file> --alt="..." --porcelain`.
-- Isi field pakai field key: `wp eval 'update_field( "field_imj_hero_title", "...", <id> );'`. Global Pro pakai `"option"`.
+- Isi field pakai field key: `wp eval 'update_field( "field_dfl_hero_title", "...", <id> );'`. Global Pro pakai `"option"`.
 - ACF Blocks: data disimpan di atribut block dalam `post_content`.
 
 ### 8. Build halaman
@@ -210,7 +210,7 @@ imj_component( 'tabs', array( 'items' => $items, 'label' => 'Kategori' ) );
 ### 10. Animasi (setelah approval)
 
 - CSS + IntersectionObserver dulu. Library hanya jika perlu dan sudah izin.
-- Hanya `transform` dan `opacity`, durasi dan easing dari token `--imj-duration` / `--imj-ease`.
+- Hanya `transform` dan `opacity`, durasi dan easing dari token `--dfl-duration` / `--dfl-ease`.
 - Hormati `prefers-reduced-motion`.
 - Konten tetap tampil tanpa JS: state awal tersembunyi hanya berlaku setelah JS menambah class `.has-js` ke `<html>`.
 
