@@ -1,4 +1,4 @@
-/* Deflow main */
+/* Main */
 (() => {
 	/* Tabs */
 	const initTabs = (root) => {

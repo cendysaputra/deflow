@@ -4,24 +4,24 @@
 defined( 'ABSPATH' ) || exit;
 
 /* Asset URL */
-function dfl_asset_url( $path ) {
-	return DFL_URI . '/' . ltrim( $path, '/' );
+function {{prefix}}_asset_url( $path ) {
+	return {{PREFIX}}_URI . '/' . ltrim( $path, '/' );
 }
 
 /* Asset version */
-function dfl_asset_version( $path ) {
-	$file = DFL_DIR . '/' . ltrim( $path, '/' );
+function {{prefix}}_asset_version( $path ) {
+	$file = {{PREFIX}}_DIR . '/' . ltrim( $path, '/' );
 
 	return file_exists( $file ) ? (string) filemtime( $file ) : wp_get_theme()->get( 'Version' );
 }
 
 /* Safe ACF getter */
-function dfl_field( $name, $post_id = false, $format = true ) {
+function {{prefix}}_field( $name, $post_id = false, $format = true ) {
 	return function_exists( 'get_field' ) ? get_field( $name, $post_id, $format ) : null;
 }
 
 /* Global field */
-function dfl_global( $name ) {
+function {{prefix}}_global( $name ) {
 	static $source = null;
 
 	if ( null === $source ) {
@@ -29,15 +29,15 @@ function dfl_global( $name ) {
 		$source = $page ? $page->ID : 'option';
 	}
 
-	return dfl_field( $name, $source );
+	return {{prefix}}_field( $name, $source );
 }
 
 /* Component loader */
-function dfl_component( $name, $args = array() ) {
+function {{prefix}}_component( $name, $args = array() ) {
 	get_template_part( 'template-parts/components/' . $name, null, $args );
 }
 
 /* Section loader */
-function dfl_section( $name, $args = array() ) {
+function {{prefix}}_section( $name, $args = array() ) {
 	get_template_part( 'template-parts/sections/' . $name, null, $args );
 }
