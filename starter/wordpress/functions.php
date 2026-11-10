@@ -1,5 +1,5 @@
 <?php
-/* {{THEME_NAME}} */
+/* {{PROJECT_NAME}} Theme */
 
 defined( 'ABSPATH' ) || exit;
 
