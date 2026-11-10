@@ -1,4 +1,4 @@
-/* Imajiner main */
+/* Deflow main */
 (() => {
 	/* Tabs */
 	const initTabs = (root) => {
