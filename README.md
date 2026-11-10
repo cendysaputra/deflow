@@ -1,60 +1,32 @@
-# Deflow — Standar Kerja Development
+# Deflow
 
-Template default untuk project website: design Figma (dibaca via Figma MCP) menjadi WordPress.
+Skill untuk membangun website WordPress dari design Figma (Astra child theme + ACF). Aturannya ada di `AGENTS.md`, jadi bisa dipakai Claude Code, Codex, Cursor, atau agent lain.
 
-Aturan utama ada di `AGENTS.md` dan bisa dipakai Claude Code, Codex, Cursor, atau agent lain. Konfigurasi `.claude/` bersifat opsional dan khusus untuk Claude Code.
-
-## Memulai project baru
-
-1. Buat site baru di LocalWP. Root WordPress ada di `~/Local Sites/<nama-site>/app/public`.
-2. Salin seluruh isi repo ini ke root WordPress tersebut (sejajar dengan `wp-config.php`).
-3. Buka shell site dari LocalWP ("Open site shell") supaya WP-CLI terhubung ke database site.
-4. Jalankan agent dari root WordPress, lalu minta agent mulai dari tahap 01.
-
-Agent akan menyalin `starter/gitignore` ke `.gitignore` dan `templates/project.md` ke `docs/project.md`, lalu mengikuti tahap di `workflow/`.
-
-## Isi repo
+## Isi
 
 ```
-AGENTS.md                  aturan utama
-CLAUDE.md                  @AGENTS.md (untuk Claude Code)
-workflow/                  01–10, satu file per tahap
-templates/project.md       template status project
-starter/gitignore          .gitignore untuk root WordPress
-starter/theme-child/       starter opsi A (child theme Astra)
-starter/theme-standalone/  starter opsi B (tanpa Astra)
-.claude/                   opsional untuk Claude Code
+SKILL.md        langkah setup project
+AGENTS.md       aturan + alur 10 tahap
+settings.json   blokir edit core WP, plugin, dan Astra (Claude Code)
+starter/theme/  starter child theme dengan placeholder
 ```
 
-## Tahap kerja
+## Install di lokal
 
-| # | File | Isi |
-|---|---|---|
-| 01 | `workflow/01-figma-check.md` | Cek WordPress, siapkan docs, cek Figma |
-| 02 | `workflow/02-theme-setup.md` | Pilih theme, render method, ACF, lalu setup theme |
-| 03 | `workflow/03-design-analysis.md` | Klasifikasi halaman dan komponen |
-| 04 | `workflow/04-global-style.md` | Token dan setting global |
-| 05 | `workflow/05-plugins-structure.md` | Plugin, pages, CPT/taxonomy, menu, permalink |
-| 06 | `workflow/06-field-groups.md` | Field group ACF |
-| 07 | `workflow/07-content-input.md` | Input konten ke field |
-| 08 | `workflow/08-build-pages.md` | Bangun halaman statis |
-| 09 | `workflow/09-qa-responsive.md` | QA responsive dan semantik |
-| 10 | `workflow/10-animation.md` | Animasi setelah approval |
+Claude Code:
 
-Di akhir setiap tahap agent berhenti dan menunggu persetujuan.
+```bash
+git clone https://github.com/cendysaputra/deflow.git ~/.claude/skills/deflow
+```
 
-## Claude Code
+Update: `git -C ~/.claude/skills/deflow pull`
 
-- `CLAUDE.md` me-load `AGENTS.md`.
-- `.claude/commands/` berisi slash command per tahap, misalnya `/01-figma-check`.
-- `.claude/settings.json` menolak edit ke `wp-admin`, `wp-includes`, `wp-*.php`, `wp-content/plugins`, dan `wp-content/themes/astra`.
+Agent lain: clone di folder mana saja. Saat mulai project, minta agent membaca `SKILL.md` dari folder itu.
 
-## Git di project
+## Mulai project
 
-`starter/gitignore` hanya men-track:
+1. Buat site di LocalWP, lalu buka **Open site shell**.
+2. Jalankan agent dari root WordPress (`app/public`).
+3. Minta: `Mulai project WordPress dari Figma <link>`.
 
-- `AGENTS.md`, `CLAUDE.md`, `workflow/`, `docs/`, `.claude/`
-- Folder theme project yang tercantum di `starter/gitignore`.
-
-Core WordPress, plugin, uploads, `starter/`, dan `templates/` tidak masuk repo project.
-
+Agent akan menanyakan nama project, author, prefix, dan pilihan theme. Setelah itu agent memasang theme dan mengikuti alur di `AGENTS.md`.
