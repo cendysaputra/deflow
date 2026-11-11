@@ -211,6 +211,14 @@
 	background-color: var(--{{prefix}}-color-border);
 }
 
+.slider .slider-progress.swiper-pagination-progressbar {
+	position: relative;
+	inset: auto;
+	width: auto;
+	background-color: var(--{{prefix}}-color-border);
+	height: var(--{{prefix}}-border-strong);
+}
+
 .slider-progress .swiper-pagination-progressbar-fill {
 	background-color: var(--{{prefix}}-color-primary);
 }
