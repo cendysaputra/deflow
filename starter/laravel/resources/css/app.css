@@ -22,6 +22,7 @@
 	--color-surface: #ffffff;
 	--color-border: #e5e7eb;
 	--color-on-primary: #ffffff;
+	--color-overlay: rgb(0 0 0 / 0.45);
 
 	/* Font */
 	--font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -42,6 +43,10 @@
 	--spacing-gutter: 24px;
 	--spacing-section: 120px;
 	--spacing-touch: 44px;
+	--spacing-slider-gap: 24px;
+	--spacing-marquee-gap: 64px;
+	--spacing-logo: 48px;
+	--spacing-hero: clamp(480px, 50vw, 720px);
 
 	/* Layout */
 	--container-site: 1200px;
@@ -57,6 +62,7 @@
 	--shadow-md: 0 8px 24px rgb(0 0 0 / 0.12);
 
 	/* Motion */
+	--default-transition-duration: 200ms;
 	--duration-reveal: 400ms;
 	--ease-reveal: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -66,6 +72,9 @@
 	@media (max-width: 921px) {
 		:root {
 			--spacing-section: 72px;
+			--spacing-slider-gap: 16px;
+			--spacing-marquee-gap: 48px;
+			--spacing-logo: 40px;
 			--text-3xl: 28px;
 			--text-4xl: 40px;
 		}
@@ -153,4 +162,62 @@
 @utility btn-outline {
 	background-color: transparent;
 	color: var(--color-primary);
+}
+
+/* Library overrides */
+/* Slider */
+.slider:not(.is-ready) .swiper-wrapper {
+	display: flex;
+	gap: var(--spacing-slider-gap);
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+}
+
+.slider:not(.is-ready) .swiper-slide {
+	flex-shrink: 0;
+	flex-basis: calc((100% - var(--spacing-slider-gap) * 2) / 3);
+	scroll-snap-align: start;
+}
+
+.slider:not(.is-ready) .slider-controls {
+	display: none;
+}
+
+.slider .slider-progress.swiper-pagination-progressbar {
+	position: relative;
+	inset: auto;
+	width: auto;
+	background-color: var(--color-border);
+	height: 2px;
+}
+
+.slider-progress .swiper-pagination-progressbar-fill {
+	background-color: var(--color-primary);
+}
+
+.slider-arrow.swiper-button-disabled {
+	opacity: 0.4;
+	cursor: default;
+}
+
+/* Marquee */
+.marquee:not(.is-ready) .swiper-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: var(--spacing-marquee-gap);
+}
+
+.marquee.is-ready .swiper-wrapper {
+	transition-timing-function: linear;
+}
+
+.marquee .swiper-slide {
+	display: flex;
+	align-items: center;
+	width: auto;
+}
+
+.marquee.is-ready .swiper-slide {
+	padding-inline: calc(var(--spacing-marquee-gap) / 2);
 }

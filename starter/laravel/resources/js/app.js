@@ -50,4 +50,9 @@
 	const init = (selector, fn) => document.querySelectorAll(selector).forEach(fn);
 
 	init('[data-tabs]', initTabs);
+
+	/* Libraries */
+	if (document.querySelector('[data-slider]')) import('./slider');
+	if (document.querySelector('[data-marquee]')) import('./marquee');
+	if (document.querySelector('[data-lightbox]')) import('./lightbox');
 })();
