@@ -1,6 +1,7 @@
 {
   "name": "deflow-qa",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "layout": "node layout.mjs",
