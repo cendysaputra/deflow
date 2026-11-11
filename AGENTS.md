@@ -178,9 +178,9 @@ Skrip Playwright ada di `qa/` (lihat `qa/README.md`). Install Playwright minta i
 | Posisi dan tinggi section vs metadata Figma di 1440px | `layout.mjs` | Selisih ≤ toleransi (default 8px) |
 | Kecerahan per pita horizontal vs PNG Figma | `bands.mjs` | Selisih rata-rata per pita ≤ 8% |
 | Screenshot 375, 544, 768, 921, 1200, 1440, 1920 × DPR 1, 1.5, 2, plus zoom ke divider, sudut, dan sambungan mask | `shots.mjs` | Dicek visual, tanpa celah atau garis |
-| Scroll horizontal, menu mobile terbuka, klik slider (geser tepat satu slide), reduced motion, error console | `interact.mjs` | Semua cek `ok` |
+| Scroll horizontal (375, 921, 1440, 1920), error console dan request gagal, satu h1, heading berurutan, alt, landmark, label form, target sentuh 44px, menu mobile (terbuka, kunci scroll, Escape), klik slider (geser tepat satu slide), reduced motion | `interact.mjs` | Semua cek `ok` |
 
-Cek manual: satu h1, heading berurutan, landmark tidak dobel, alt terisi, label form, error server.
+Cek manual: isi alt sesuai aturan, kontras teks di atas foto, error server di log.
 
 ## Definition of done per halaman
 
