@@ -1,0 +1,23 @@
+{
+  "baseUrl": "http://nama-project.local",
+  "out": "docs/qa",
+  "tolerance": 8,
+  "bandHeight": 40,
+  "bandTolerance": 0.08,
+  "menuToggle": "",
+  "pages": [
+    {
+      "name": "home",
+      "path": "/",
+      "figma": {
+        "width": 1440,
+        "png": "docs/qa/figma/home.png",
+        "sections": [
+          { "name": "hero", "selector": "#hero", "y": 0, "height": 720 },
+          { "name": "produk", "selector": "#produk", "y": 720, "height": 640 }
+        ]
+      },
+      "zoom": [".hero-tab", ".section-divider"]
+    }
+  ]
+}

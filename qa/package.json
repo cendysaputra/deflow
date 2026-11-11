@@ -1,0 +1,14 @@
+{
+  "name": "deflow-qa",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "layout": "node layout.mjs",
+    "bands": "node bands.mjs",
+    "shots": "node shots.mjs",
+    "interact": "node interact.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.64.1"
+  }
+}
