@@ -10,7 +10,7 @@ Tidak ditanyakan. Hanya berubah kalau user memintanya sendiri.
 - CMS: Sunrice CMS (`sunrice/admin` + `sunrice/cms`, https://github.com/Digital-Citra-Kreatif/sunrice-cms).
 - Styling: Tailwind v4 lewat Vite.
 - Syarat: PHP 8.4 dan Laravel 13. Cek `php -v` dan `php artisan --version` dulu. Kalau tidak cocok, berhenti dan lapor.
-- Tanya sebelum install package Composer/npm.
+- Tanya sebelum install package Composer/npm, kecuali library standar: `npm install swiper@14.3.0 glightbox@3.3.1 --save-exact`.
 
 ## Identitas
 
@@ -40,6 +40,7 @@ Tidak ditanyakan. Hanya berubah kalau user memintanya sendiri.
 - Data: `$values['field'] ?? null` di template halaman, `Cms::entries()`, `Cms::global()`, `Cms::menu()`. Layout dan partial membaca halaman dari `cms_page()`.
 - Output di-escape dengan `{{ }}`. Rich text sudah dibersihkan saat disimpan, jadi dicetak `{!! !!}`. Field `code` tidak dibersihkan, jangan dicetak mentah.
 - Layout starter Sunrice memuat `public/cms/site.css`. Ganti dengan `@vite(['resources/css/app.css', 'resources/js/app.js'])`.
+- Gambar: ikuti aturan umum "Aset gambar". Upload ke media library Sunrice, alt diisi per bahasa di media library. Cara mencetak gambar responsif (srcset, ukuran) mengikuti `site.md` dan `fields.md`. Data media dipetakan dulu ke key komponen (`src`, `srcset`, `full`, `alt`, `caption`, `width`, `height`).
 
 ## Tailwind
 
@@ -50,35 +51,57 @@ Tidak ditanyakan. Hanya berubah kalau user memintanya sendiri.
 - Pola berulang (section, container, btn, card) jadi Blade component atau `@utility` di `app.css`, bukan class panjang yang di-copy.
 - Class dan id custom (nama component, `@utility`, id) kebab-case. Class utility Tailwind dibiarkan.
 - Hook JS pakai `data-*`.
+- CSS library (Swiper, GLightbox) dimuat lewat JS dan tidak berada di layer, jadi menang dari utility Tailwind. Override untuk elemen library ditulis di bagian "Library overrides" di `app.css` (di luar `@layer`), dengan selector yang lebih spesifik dari CSS library.
 
 ## Isi starter
 
 | File | Isi |
 |---|---|
-| `resources/css/app.css` | `@theme`, varian `max-tablet` / `max-mobile`, `@utility` `section`, `section-fill`, `container`, `btn`, `btn-outline` |
-| `resources/js/app.js` | Init komponen via `data-*` (tabs) |
-| `resources/views/components/` | `button`, `accordion`, `tabs` |
+| `resources/css/app.css` | `@theme`, varian `max-tablet` / `max-mobile`, `@utility` `section`, `section-fill`, `container`, `btn`, `btn-outline`, override library |
+| `resources/js/app.js` | Init tabs, lalu `import()` `slider.js`, `marquee.js`, `lightbox.js` hanya jika komponennya ada di halaman |
+| `resources/js/slider.js`, `marquee.js`, `lightbox.js` | Init Swiper dan GLightbox |
+| `resources/views/components/` | `button`, `accordion`, `tabs`, `slider`, `marquee`, `gallery` |
 
 ```blade
 <x-button :link="$values['hero_link'] ?? null" variant="outline" />
 <x-accordion :items="$items" name="faq" :level="3" />
 <x-tabs :items="$items" label="Kategori" />
+<x-slider label="Produk" :per-view="[3, 2, 1]">
+    @foreach ($products as $product)
+        <li class="swiper-slide"><x-card :entry="$product" /></li>
+    @endforeach
+</x-slider>
+<x-marquee :items="$logos" label="Klien" :speed="5000" />
+<x-gallery :images="$images" :columns="3" />
 ```
 
 - `button`: `link` = field Link Sunrice (`url`, `label`, `new_tab`).
 - `accordion`: `items` = `title` + `content`. Pakai `<details>`, jalan tanpa JS.
 - `tabs`: `items` = `label` + `content`. Tanpa JS, semua panel tampil.
+- `slider`: isi slide lewat slot, setiap slide `<li class="swiper-slide">`. `per-view` = desktop, tablet, mobile. Tanpa JS jadi baris yang bisa di-scroll.
+- `marquee`: `items` = `src`, `alt`, `width`, `height`, `link` opsional. Klon untuk loop ditandai `aria-hidden`. Berhenti saat hover dan lewat tombol jeda (muncul saat fokus keyboard). Reduced motion dan tanpa JS: logo tampil statis.
+- `gallery`: `images` = `src`, `full`, `alt`, `srcset` dan `caption` opsional. Klik membuka GLightbox.
 - Grid: `grid grid-cols-4 max-tablet:grid-cols-2 max-mobile:grid-cols-1`.
+
+## Backup
+
+Simpan di `backup/` (tidak masuk git), catat di `docs/project.md`.
+
+| Sebelum | Perintah |
+|---|---|
+| Import struktur atau konten | `php artisan sunrice:export-structure backup/<tanggal>-structure.json --entries --settings` |
+| Perubahan database lain (migration, seeder, rename field) | Dump database dari Herd/Sail (`mysqldump` / `sail mysql`), plus export struktur |
+| Ganti media | Catat media lama → baru, file lama disimpan di `backup/media/` |
 
 ## Alur 10 tahap di Laravel
 
-1. **Cek awal**: `php -v`, `php artisan --version`, `composer show sunrice/cms`, `php artisan route:list`.
-2. **Setup**: install `sunrice/cms` jika belum ada (izin), jalankan langkah setup Sunrice, salin starter, `npm install` (izin) dan `npm run build`. Cek homepage tanpa error.
+1. **Cek awal**: `php -v`, `php artisan --version`, `composer show sunrice/cms`, `php artisan route:list`. Mode audit: `php artisan sunrice:export-structure docs/structure.json --entries` untuk melihat struktur yang sudah ada, lalu catat template di `resources/views/cms/` dan komponen yang sudah ada.
+2. **Setup**: install `sunrice/cms` jika belum ada (izin), jalankan langkah setup Sunrice, salin starter, `npm install` (izin), `npm install swiper@14.3.0 glightbox@3.3.1 --save-exact`, lalu `npm run build`. Cek homepage tanpa error.
 3. **Analisis design**: directory = collection (listing + entry). Kategori = taxonomy. Header/footer = global + menu.
 4. **Global style**: isi `@theme` di `app.css`.
-5. **Struktur**: tulis collection, taxonomy, global, dan menu di `docs/structure.json`.
+5. **Struktur**: backup, lalu tulis collection, taxonomy, global, dan menu di `docs/structure.json`.
 6. **Field**: tulis blueprint dan fieldset di file yang sama, lalu dry run dan import.
-7. **Konten**: upload gambar ke media library, tulis `entries` dan nilai global di `docs/structure.json`, lalu dry run dan import.
+7. **Konten**: backup, upload gambar ke media library (alt sesuai aturan umum), tulis `entries` dan nilai global di `docs/structure.json`, lalu dry run dan import.
 8. **Build halaman**: template di `resources/views/cms/`. `<section class="section">` → `<div class="container">`.
-9. **QA**: error di `storage/logs/laravel.log`. `npm run build` tanpa error.
+9. **QA**: skrip `qa/` terhadap URL lokal (Herd/Sail). Error di `storage/logs/laravel.log`. `npm run build` tanpa error.
 10. **Animasi**: durasi dan easing dari token `--duration-reveal` / `--ease-reveal`.
