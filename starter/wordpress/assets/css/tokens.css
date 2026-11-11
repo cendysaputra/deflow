@@ -59,7 +59,17 @@
 	--{{prefix}}-btn-padding-x: var(--{{prefix}}-space-5);
 	--{{prefix}}-btn-radius: var(--{{prefix}}-radius-md);
 
+	/* Media */
+	--{{prefix}}-overlay: rgb(0 0 0 / 0.45);
+	--{{prefix}}-hero-height: clamp(480px, 50vw, 720px);
+
+	/* Slider */
+	--{{prefix}}-slider-gap: var(--{{prefix}}-space-5);
+	--{{prefix}}-marquee-gap: var(--{{prefix}}-space-9);
+	--{{prefix}}-marquee-logo: 48px;
+
 	/* Motion */
+	--{{prefix}}-transition: 200ms ease;
 	--{{prefix}}-duration: 400ms;
 	--{{prefix}}-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -68,6 +78,9 @@
 @media (max-width: 921px) {
 	:root {
 		--{{prefix}}-section-space: 72px;
+		--{{prefix}}-slider-gap: var(--{{prefix}}-space-4);
+		--{{prefix}}-marquee-gap: var(--{{prefix}}-space-8);
+		--{{prefix}}-marquee-logo: 40px;
 		--{{prefix}}-text-3xl: 28px;
 		--{{prefix}}-text-4xl: 40px;
 	}
